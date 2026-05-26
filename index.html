@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AegisMD — Clinical AI Safety Assessment</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --white:#FFFFFF;--off-white:#F8F7F4;--navy:#0A1628;--navy-mid:#12253F;
+  --teal:#0D6E72;--teal-light:#0F8A8F;--warm-grey:#E8E4DC;
+  --text-dark:#1A1A2E;--text-mid:#4A5568;--text-light:#8A96A8;--gold:#C4975A;
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--white);color:var(--text-dark);overflow-x:hidden}
+
+/* SHIELD SVG COMPONENT - inline reusable */
+.shield-logo-inline{display:flex;align-items:center;gap:14px}
+.shield-logo-stacked{display:flex;flex-direction:column;align-items:center;gap:10px}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:20px 48px;display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.94);backdrop-filter:blur(12px);border-bottom:1px solid rgba(10,22,40,0.06);transition:padding 0.3s ease}
+.nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.nav-wordmark{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--navy);letter-spacing:0.04em}
+.nav-wordmark span{color:var(--teal)}
+.nav-cta{font-size:12px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--white);background:var(--navy);padding:12px 28px;border:none;cursor:pointer;text-decoration:none;transition:background 0.2s ease}
+.nav-cta:hover{background:var(--teal)}
+
+/* HERO */
+.hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:120px 48px 80px;gap:80px;max-width:1280px;margin:0 auto}
+.hero-left{opacity:0;transform:translateY(30px);animation:fadeUp 0.9s ease 0.2s forwards}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--teal);margin-bottom:32px}
+.hero-eyebrow::before{content:'';display:block;width:32px;height:1px;background:var(--teal)}
+.hero-headline{font-family:'Cormorant Garamond',serif;font-size:clamp(42px,5vw,68px);font-weight:300;line-height:1.12;color:var(--navy);margin-bottom:28px;letter-spacing:-0.01em}
+.hero-headline em{font-style:italic;color:var(--teal)}
+.hero-sub{font-size:17px;font-weight:300;line-height:1.7;color:var(--text-mid);margin-bottom:48px;max-width:480px}
+.hero-actions{display:flex;align-items:center;gap:32px;flex-wrap:wrap}
+.btn-primary{display:inline-block;font-size:13px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--white);background:var(--navy);padding:18px 40px;text-decoration:none;transition:background 0.25s ease;position:relative;overflow:hidden}
+.btn-primary::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--gold);transition:width 0.3s ease}
+.btn-primary:hover{background:var(--teal)}
+.btn-primary:hover::after{width:100%}
+.btn-secondary{font-size:13px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-mid);text-decoration:none;display:flex;align-items:center;gap:8px;transition:color 0.2s ease}
+.btn-secondary:hover{color:var(--teal)}
+.btn-secondary::after{content:'↓';font-size:16px}
+
+/* HERO PHOTO */
+.hero-right{opacity:0;transform:translateX(30px);animation:fadeLeft 0.9s ease 0.4s forwards;position:relative}
+.photo-frame{position:relative;width:100%;max-width:480px;margin-left:auto}
+.photo-bg{position:absolute;top:24px;right:-24px;width:100%;height:100%;background:var(--warm-grey);z-index:0}
+.photo-frame img{position:relative;z-index:1;width:100%;display:block;filter:grayscale(8%)}
+.photo-credential{position:absolute;bottom:-24px;left:-24px;z-index:2;background:var(--navy);color:var(--white);padding:20px 28px;min-width:260px}
+.photo-credential .cred-name{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;margin-bottom:4px}
+.photo-credential .cred-title{font-size:11px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal-light);line-height:1.6}
+
+/* TRUST STRIP */
+.trust-strip{background:var(--off-white);border-top:1px solid var(--warm-grey);border-bottom:1px solid var(--warm-grey);padding:28px 48px;margin-top:60px}
+.trust-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:48px;flex-wrap:wrap}
+.trust-item{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-mid)}
+.trust-dot{width:6px;height:6px;background:var(--teal);border-radius:50%;flex-shrink:0}
+
+/* SECTIONS */
+.section-problem{padding:120px 48px;max-width:1280px;margin:0 auto}
+.section-label{font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--teal);margin-bottom:24px;display:flex;align-items:center;gap:12px}
+.section-label::after{content:'';display:block;width:48px;height:1px;background:var(--teal)}
+.section-headline{font-family:'Cormorant Garamond',serif;font-size:clamp(34px,4vw,52px);font-weight:300;line-height:1.18;color:var(--navy);max-width:680px;margin-bottom:48px}
+.problem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:64px}
+.problem-card{background:var(--off-white);padding:40px 36px;border-top:3px solid transparent;transition:border-color 0.3s ease}
+.problem-card:hover{border-color:var(--teal)}
+.problem-number{font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:300;color:var(--warm-grey);margin-bottom:16px;line-height:1}
+.problem-title{font-size:15px;font-weight:500;color:var(--navy);margin-bottom:12px}
+.problem-text{font-size:14px;font-weight:300;line-height:1.7;color:var(--text-mid)}
+
+/* OFFER */
+.section-offer{background:var(--navy);padding:120px 48px}
+.offer-inner{max-width:1280px;margin:0 auto}
+.offer-inner .section-label{color:var(--teal-light)}
+.offer-inner .section-label::after{background:var(--teal-light)}
+.offer-inner .section-headline{color:var(--white);max-width:560px}
+.offer-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;margin-top:64px}
+.offer-item{background:var(--navy-mid);padding:40px;display:flex;gap:24px;align-items:flex-start;transition:background 0.2s ease}
+.offer-item:hover{background:rgba(13,110,114,0.15)}
+.offer-icon{width:40px;height:40px;border:1px solid var(--teal);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--teal);font-size:16px}
+.offer-text h4{font-size:15px;font-weight:500;color:var(--white);margin-bottom:8px}
+.offer-text p{font-size:14px;font-weight:300;line-height:1.65;color:rgba(255,255,255,0.55)}
+
+/* PRICING */
+.section-pricing{padding:120px 48px;max-width:1280px;margin:0 auto}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:64px}
+.pricing-card{background:var(--off-white);padding:48px 36px;position:relative;transition:transform 0.3s ease}
+.pricing-card:hover{transform:translateY(-4px)}
+.pricing-card.featured{background:var(--navy);color:var(--white)}
+.pricing-badge{position:absolute;top:-1px;right:32px;background:var(--gold);color:var(--white);font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;padding:6px 14px}
+.pricing-tier{font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--teal);margin-bottom:20px}
+.pricing-card.featured .pricing-tier{color:var(--teal-light)}
+.pricing-price{font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:300;color:var(--navy);line-height:1;margin-bottom:6px}
+.pricing-card.featured .pricing-price{color:var(--white)}
+.pricing-range{font-size:12px;color:var(--text-light);margin-bottom:28px}
+.pricing-card.featured .pricing-range{color:rgba(255,255,255,0.45)}
+.pricing-divider{width:32px;height:1px;background:var(--teal);margin-bottom:28px}
+.pricing-features{list-style:none;margin-bottom:40px}
+.pricing-features li{font-size:13px;font-weight:300;line-height:1.6;color:var(--text-mid);padding:8px 0;border-bottom:1px solid rgba(0,0,0,0.06);display:flex;gap:10px;align-items:flex-start}
+.pricing-card.featured .pricing-features li{color:rgba(255,255,255,0.65);border-bottom-color:rgba(255,255,255,0.08)}
+.pricing-features li::before{content:'—';color:var(--teal);font-size:12px;flex-shrink:0;margin-top:1px}
+.pricing-founding{background:rgba(196,151,90,0.08);border:1px solid var(--gold);padding:16px 20px;margin-bottom:28px;font-size:12px;color:var(--gold);font-weight:500;letter-spacing:0.04em}
+.btn-outline{display:inline-block;font-size:12px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--navy);border:1px solid var(--navy);padding:14px 28px;text-decoration:none;transition:all 0.2s ease;width:100%;text-align:center}
+.btn-outline:hover{background:var(--navy);color:var(--white)}
+.btn-outline-white{display:inline-block;font-size:12px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--white);border:1px solid rgba(255,255,255,0.4);padding:14px 28px;text-decoration:none;transition:all 0.2s ease;width:100%;text-align:center}
+.btn-outline-white:hover{background:var(--teal);border-color:var(--teal)}
+
+/* ABOUT */
+.section-about{background:var(--off-white);padding:120px 48px}
+.about-inner{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:center}
+.about-photo{position:relative}
+.about-photo img{width:100%;max-width:440px;display:block;filter:grayscale(10%);position:relative;z-index:1}
+.about-accent{position:absolute;top:-20px;left:-20px;width:120px;height:120px;border:1px solid var(--teal);z-index:0;pointer-events:none}
+.about-body{font-size:16px;font-weight:300;line-height:1.8;color:var(--text-mid);margin-bottom:40px}
+.credential-list{list-style:none;display:flex;flex-direction:column;gap:12px}
+.credential-list li{font-size:13px;font-weight:400;color:var(--text-dark);display:flex;align-items:center;gap:12px}
+.credential-list li::before{content:'';width:20px;height:1px;background:var(--teal);flex-shrink:0}
+
+/* PROCESS */
+.section-process{padding:120px 48px;max-width:1280px;margin:0 auto}
+.process-steps{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-top:64px;position:relative}
+.process-steps::before{content:'';position:absolute;top:28px;left:10%;right:10%;height:1px;background:var(--warm-grey);z-index:0}
+.process-step{padding:0 20px;text-align:center;position:relative;z-index:1}
+.step-number{width:56px;height:56px;border:1px solid var(--navy);background:var(--white);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:var(--navy);transition:all 0.3s ease}
+.process-step:hover .step-number{background:var(--navy);color:var(--white)}
+.step-title{font-size:13px;font-weight:500;color:var(--navy);margin-bottom:8px}
+.step-text{font-size:12px;font-weight:300;line-height:1.6;color:var(--text-light)}
+
+/* CTA */
+.section-cta{background:var(--navy);padding:100px 48px;text-align:center;position:relative;overflow:hidden}
+.section-cta::before{content:'AegisMD';font-family:'Cormorant Garamond',serif;font-size:280px;font-weight:300;color:rgba(255,255,255,0.02);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none}
+.cta-inner{position:relative;z-index:1;max-width:680px;margin:0 auto}
+.cta-inner .section-label{color:var(--teal-light);justify-content:center}
+.cta-inner .section-label::after{display:none}
+.cta-inner .section-label::before{content:'';display:block;width:48px;height:1px;background:var(--teal-light)}
+.cta-headline{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,5vw,56px);font-weight:300;color:var(--white);line-height:1.15;margin:24px 0 20px}
+.cta-sub{font-size:16px;font-weight:300;color:rgba(255,255,255,0.55);line-height:1.7;margin-bottom:48px}
+.cta-email-prompt{font-size:13px;color:rgba(255,255,255,0.35);margin-top:20px;letter-spacing:0.04em}
+
+/* FOOTER */
+footer{background:#060E1A;padding:48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
+.footer-logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.footer-wordmark{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:var(--white);letter-spacing:0.04em}
+.footer-wordmark span{color:var(--teal)}
+.footer-text{font-size:12px;color:rgba(255,255,255,0.3);letter-spacing:0.04em;text-align:center}
+.footer-link{font-size:12px;color:rgba(255,255,255,0.4);text-decoration:none;letter-spacing:0.06em;text-transform:uppercase;transition:color 0.2s ease}
+.footer-link:hover{color:var(--teal)}
+
+/* ANIMATIONS */
+@keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+@keyframes fadeLeft{to{opacity:1;transform:translateX(0)}}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s ease,transform 0.7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  nav{padding:16px 24px}
+  .hero{grid-template-columns:1fr;padding:100px 24px 60px;gap:60px}
+  .hero-right{order:2}
+  .photo-bg{display:none}
+  .photo-credential{left:0;bottom:-20px}
+  .problem-grid,.offer-grid,.pricing-grid,.about-inner{grid-template-columns:1fr;gap:2px}
+  .process-steps{grid-template-columns:1fr 1fr;gap:32px}
+  .process-steps::before{display:none}
+  .section-problem,.section-pricing,.section-process,.section-offer,.section-about,.section-cta{padding:80px 24px}
+  .trust-strip{padding:24px}
+  .trust-inner{gap:24px}
+  footer{padding:32px 24px;flex-direction:column;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="topnav">
+  <a class="nav-logo" href="#">
+    <svg width="32" height="37" viewBox="0 0 48 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M24 2L44 10V28C44 40 35 49 24 53C13 49 4 40 4 28V10L24 2Z" fill="#0A1628"/>
+      <path d="M24 6L40 13V28C40 38.5 32.5 47 24 50C15.5 47 8 38.5 8 28V13L24 6Z" fill="#0D1F35"/>
+      <path d="M24 18L31.5 37" stroke="#0D6E72" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M24 18L16.5 37" stroke="#0D6E72" stroke-width="2.2" stroke-linecap="round"/>
+      <line x1="18.5" y1="30.5" x2="29.5" y2="30.5" stroke="#0D6E72" stroke-width="2" stroke-linecap="round"/>
+      <path d="M14 10.5L24 6.5L34 10.5" stroke="#C4975A" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
+    </svg>
+    <div class="nav-wordmark">Aegis<span>MD</span></div>
+  </a>
+  <a class="nav-cta" href="mailto:AegisMD.safety@outlook.com?subject=AegisMD%20Assessment%20Request&body=Hello%20Dr.%20Satti%2C%0A%0AI%27d%20like%20to%20request%20a%20clinical%20AI%20safety%20assessment.%0A%0ATool%20name%3A%20%0AWhat%20it%20does%20and%20who%20uses%20it%20(clinicians%20or%20patients)%3A%20%0ACurrent%20deployment%20stage%3A%20%0A%0AThank%20you.">Request Assessment</a>
+</nav>
+
+<!-- HERO -->
+<section style="background:var(--white)">
+  <div class="hero">
+    <div class="hero-left">
+      <div class="hero-eyebrow">Clinical AI Safety Assessment</div>
+      <h1 class="hero-headline">Your clinical AI,<br><em>independently<br>verified.</em></h1>
+      <p class="hero-sub">Physician-led adversarial safety assessments for health AI companies serious about hospital-grade trust. 39-point framework. Written report. Delivered in 10 days.</p>
+      <div class="hero-actions">
+        <a class="btn-primary" href="mailto:AegisMD.safety@outlook.com?subject=AegisMD%20Assessment%20Request&body=Hello%20Dr.%20Satti%2C%0A%0AI%27d%20like%20to%20request%20a%20clinical%20AI%20safety%20assessment.%0A%0ATool%20name%3A%20%0AWhat%20it%20does%20and%20who%20uses%20it%20(clinicians%20or%20patients)%3A%20%0ACurrent%20deployment%20stage%3A%20%0A%0AThank%20you.">Request Your Assessment</a>
+        <a class="btn-secondary" href="#offer">See What's Included</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="photo-frame">
+        <div class="photo-bg"></div>
+        <img src="https://raw.githubusercontent.com/enamsatti/Aegismd-api/main/photo.png" onerror="this.style.background='#0A1628';this.style.minHeight="280px"" alt="Dr. Dr. Enam Satti">
+        <div class="photo-credential">
+          <div class="cred-name">Dr. Enam Satti</div>
+          <div class="cred-title">Physician · Clinical AI Safety Audits</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST STRIP -->
+<div class="trust-strip">
+  <div class="trust-inner">
+    <div class="trust-item"><div class="trust-dot"></div>CHAI–Joint Commission Aligned</div>
+    <div class="trust-item"><div class="trust-dot"></div>39-Point Adversarial Framework</div>
+    <div class="trust-item"><div class="trust-dot"></div>Physician-Led Assessment</div>
+    <div class="trust-item"><div class="trust-dot"></div>UN AI Governance Contributor</div>
+    <div class="trust-item"><div class="trust-dot"></div>No Commercial AI Interest</div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="section-problem">
+  <div class="section-label reveal">The Problem</div>
+  <h2 class="section-headline reveal">Hospital procurement now demands safety evidence your team doesn't have.</h2>
+  <div class="problem-grid">
+    <div class="problem-card reveal">
+      <div class="problem-number">01</div>
+      <div class="problem-title">You're going into a hospital pitch unprepared</div>
+      <p class="problem-text">Procurement teams are asking clinical safety questions that developers and founders cannot answer. Without independent validation, deals stall or fail.</p>
+    </div>
+    <div class="problem-card reveal">
+      <div class="problem-number">02</div>
+      <div class="problem-title">Your AI has vulnerabilities you haven't tested for</div>
+      <p class="problem-text">Persona hijacking, dosing logic failures, diagnostic bias, prompt injection — these are real attack vectors in clinical AI that standard QA processes never catch.</p>
+    </div>
+    <div class="problem-card reveal">
+      <div class="problem-number">03</div>
+      <div class="problem-title">Investors are asking harder governance questions</div>
+      <p class="problem-text">Series A due diligence now includes clinical AI safety. An independent assessment from a credentialed physician is the clearest answer you can give.</p>
+    </div>
+  </div>
+</section>
+
+<!-- OFFER -->
+<section class="section-offer" id="offer">
+  <div class="offer-inner">
+    <div class="section-label reveal">What You Receive</div>
+    <h2 class="section-headline reveal">A written report that answers every safety question — before anyone asks it.</h2>
+    <div class="offer-grid">
+      <div class="offer-item reveal">
+        <div class="offer-icon">✦</div>
+        <div class="offer-text"><h4>Executive Summary</h4><p>Overall compliance rating, critical findings, and priority recommendations in plain language. Suitable for CEO and investor review.</p></div>
+      </div>
+      <div class="offer-item reveal">
+        <div class="offer-icon">✦</div>
+        <div class="offer-text"><h4>24 or 39-Point Adversarial Assessment</h4><p>Structured evaluation across authority exploits, clinical logic failures, and technical privacy attacks. Each class rated Red, Amber, or Green.</p></div>
+      </div>
+      <div class="offer-item reveal">
+        <div class="offer-icon">✦</div>
+        <div class="offer-text"><h4>CHAI–Joint Commission Alignment</h4><p>Findings mapped against the framework hospital procurement teams and accreditation bodies currently apply when evaluating clinical AI vendors.</p></div>
+      </div>
+      <div class="offer-item reveal">
+        <div class="offer-icon">✦</div>
+        <div class="offer-text"><h4>Geographical Bias Evaluation</h4><p>Performance assessed across diverse epidemiological contexts and patient populations. No other independent clinical AI assessor at this level evaluates this.</p></div>
+      </div>
+      <div class="offer-item reveal">
+        <div class="offer-icon">✦</div>
+        <div class="offer-text"><h4>Remediation Roadmap</h4><p>Specific, actionable guidance organized by priority — Critical, High, Medium, and Low — with enough detail that your development team can act immediately.</p></div>
+      </div>
+      <div class="offer-item reveal">
+        <div class="offer-icon">✦</div>
+        <div class="offer-text"><h4>Formal Compliance Statement</h4><p>A written statement you can share with hospital partners and investors. Includes a revalidation schedule aligned with Joint Commission-CHAI requirements.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section-pricing" id="pricing">
+  <div class="section-label reveal">Assessment Tiers</div>
+  <h2 class="section-headline reveal">Independent physician expertise, priced for health AI startups.</h2>
+  <div class="pricing-grid">
+    <div class="pricing-card reveal">
+      <div class="pricing-tier">Founding Rate</div>
+      <div class="pricing-price">$2,500</div>
+      <div class="pricing-range">Limited to 3 clients only</div>
+      <div class="pricing-divider"></div>
+      <div class="pricing-founding">⟡ Full Standard assessment — early access rate</div>
+      <ul class="pricing-features">
+        <li>Full 24-point adversarial evaluation</li>
+        <li>CHAI–Joint Commission alignment mapping</li>
+        <li>Geographical bias assessment</li>
+        <li>Written report — Word + PDF</li>
+        <li>One-hour debrief call</li>
+        <li>Formal compliance statement</li>
+      </ul>
+      <a class="btn-outline" href="mailto:AegisMD.safety@outlook.com?subject=AegisMD%20Founding%20Rate%20Request&body=Hello%20Dr.%20Satti%2C%0A%0AI%27m%20interested%20in%20the%20AegisMD%20Founding%20Rate%20assessment.%0A%0ATool%20name%3A%20%0AWhat%20it%20does%20and%20who%20uses%20it%3A%20%0ACurrent%20deployment%20stage%3A%20%0A%0AThank%20you.">Request Founding Rate</a>
+    </div>
+    <div class="pricing-card featured reveal">
+      <div class="pricing-badge">Most Popular</div>
+      <div class="pricing-tier">Standard</div>
+      <div class="pricing-price">$8,000</div>
+      <div class="pricing-range">to $12,000 depending on scope</div>
+      <div class="pricing-divider"></div>
+      <ul class="pricing-features">
+        <li>Full 24-point adversarial evaluation</li>
+        <li>Governance gap analysis</li>
+        <li>CHAI–Joint Commission alignment</li>
+        <li>Geographical bias assessment</li>
+        <li>Written report — Word + PDF</li>
+        <li>One-hour debrief call</li>
+        <li>Formal compliance statement</li>
+        <li>Revalidation schedule included</li>
+      </ul>
+      <a class="btn-outline-white" href="mailto:AegisMD.safety@outlook.com?subject=AegisMD%20Standard%20Assessment%20Request&body=Hello%20Dr.%20Satti%2C%0A%0AI%27d%20like%20to%20request%20a%20Standard%20clinical%20AI%20safety%20assessment.%0A%0ATool%20name%3A%20%0AWhat%20it%20does%20and%20who%20uses%20it%3A%20%0ACurrent%20deployment%20stage%3A%20%0A%0AThank%20you.">Request Standard Assessment</a>
+    </div>
+    <div class="pricing-card reveal">
+      <div class="pricing-tier">Comprehensive</div>
+      <div class="pricing-price">$15,000</div>
+      <div class="pricing-range">to $25,000 depending on scope</div>
+      <div class="pricing-divider"></div>
+      <ul class="pricing-features">
+        <li>Full 39-point adversarial evaluation</li>
+        <li>Multi-module system assessment</li>
+        <li>Extended geographical bias deep-dive</li>
+        <li>Architecture review included</li>
+        <li>Multi-setting deployment assessment</li>
+        <li>Written report — Word + PDF</li>
+        <li>Two debrief calls</li>
+        <li>Formal compliance statement</li>
+      </ul>
+      <a class="btn-outline" href="mailto:AegisMD.safety@outlook.com?subject=AegisMD%20Comprehensive%20Assessment%20Request&body=Hello%20Dr.%20Satti%2C%0A%0AI%27d%20like%20to%20request%20a%20Comprehensive%20clinical%20AI%20safety%20assessment.%0A%0ATool%20name%3A%20%0AWhat%20it%20does%20and%20who%20uses%20it%3A%20%0ACurrent%20deployment%20stage%3A%20%0A%0AThank%20you.">Request Comprehensive</a>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="section-about" id="about">
+  <div class="about-inner">
+    <div class="about-photo reveal">
+      <div class="about-accent"></div>
+      <img src="https://raw.githubusercontent.com/enamsatti/Aegismd-api/main/photo.png" onerror="this.style.background='#E8E4DC';this.style.minHeight='440px'" alt="Dr. Enam Satti">
+    </div>
+    <div class="about-content">
+      <div class="section-label reveal">The Assessor</div>
+      <h2 class="section-headline reveal">A physician who stakes their credentials on every finding.</h2>
+      <p class="about-body reveal">I am Dr. Enam Satti — a physician and clinical AI safety researcher. I built AegisMD because I saw what happens when AI systems reach clinical workflows without proper adversarial testing. The consequences are not abstract. They are patient safety events waiting to happen.<br><br>Every AegisMD assessment is conducted personally by me. Not a team. Not automated software. A physician who understands both the clinical context and the adversarial attack surface.</p>
+      <ul class="credential-list reveal">
+        <li>Physician · Clinical AI Safety Researcher</li>
+        <li>Clinical AI Safety Lead, Medicine First (medicinefirst.org)</li>
+        <li>Member, AI2030 Global Initiative for Ethical AI</li>
+        <li>Contributor, UN Global Dialogue on AI Governance (2026)</li>
+        <li>No commercial interest in any clinical AI product</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="section-process" id="process">
+  <div class="section-label reveal">How It Works</div>
+  <h2 class="section-headline reveal">From first email to written report in 10 business days.</h2>
+  <div class="process-steps">
+    <div class="process-step reveal">
+      <div class="step-number">1</div>
+      <div class="step-title">Contact</div>
+      <p class="step-text">Email a brief description of your tool — name, clinical use, deployment status.</p>
+    </div>
+    <div class="process-step reveal">
+      <div class="step-number">2</div>
+      <div class="step-title">Scoping Call</div>
+      <p class="step-text">30-minute call within 48 hours. Scope, timeline, and pricing confirmed.</p>
+    </div>
+    <div class="process-step reveal">
+      <div class="step-number">3</div>
+      <div class="step-title">Intake</div>
+      <p class="step-text">You provide system access or outputs and safety documentation. No patient data required.</p>
+    </div>
+    <div class="process-step reveal">
+      <div class="step-number">4</div>
+      <div class="step-title">Assessment</div>
+      <p class="step-text">Full adversarial evaluation conducted remotely. 5–10 business days.</p>
+    </div>
+    <div class="process-step reveal">
+      <div class="step-number">5</div>
+      <div class="step-title">Delivery</div>
+      <p class="step-text">Written report in Word and PDF. One-hour debrief call included.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section-cta">
+  <div class="cta-inner">
+    <div class="section-label">Get Started</div>
+    <h2 class="cta-headline">Ready to verify your clinical AI?</h2>
+    <p class="cta-sub">Send a brief description of your tool and we will schedule a scoping call within 48 hours. No commitment required at that stage.</p>
+    <a class="btn-primary" style="font-size:14px;padding:20px 48px" href="mailto:AegisMD.safety@outlook.com?subject=AegisMD%20Assessment%20Request&body=Hello%20Dr.%20Satti%2C%0A%0AI%27d%20like%20to%20request%20a%20clinical%20AI%20safety%20assessment.%0A%0ATool%20name%3A%20%0AWhat%20it%20does%20and%20who%20uses%20it%20(clinicians%20or%20patients)%3A%20%0ACurrent%20deployment%20stage%3A%20%0A%0AThank%20you.">Request Your Assessment</a>
+    <p class="cta-email-prompt">AegisMD.safety@outlook.com · Response within 24 hours</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a class="footer-logo" href="#">
+    <svg width="24" height="28" viewBox="0 0 48 56" fill="none">
+      <path d="M24 2L44 10V28C44 40 35 49 24 53C13 49 4 40 4 28V10L24 2Z" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+      <path d="M24 18L31.5 37" stroke="#0F8A8F" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M24 18L16.5 37" stroke="#0F8A8F" stroke-width="2.2" stroke-linecap="round"/>
+      <line x1="18.5" y1="30.5" x2="29.5" y2="30.5" stroke="#0F8A8F" stroke-width="2" stroke-linecap="round"/>
+      <path d="M14 10.5L24 6.5L34 10.5" stroke="#C4975A" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+    </svg>
+    <div class="footer-wordmark">Aegis<span>MD</span></div>
+  </a>
+  <div class="footer-text">© 2026 AegisMD · Independent Clinical AI Safety Assessment · Brazil<br>AegisMD operates independently with no commercial interest in any clinical AI product.</div>
+  <a class="footer-link" href="mailto:AegisMD.safety@outlook.com">Contact</a>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var reveals = document.querySelectorAll('.reveal');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        setTimeout(function() {
+          entry.target.classList.add('visible');
+        }, 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {threshold: 0.1, rootMargin: '0px 0px -40px 0px'});
+  reveals.forEach(function(el) { observer.observe(el); });
+  window.addEventListener('scroll', function() {
+    var nav = document.getElementById('topnav');
+    if (nav) {
+      nav.style.padding = window.scrollY > 40 ? '14px 48px' : '20px 48px';
+    }
+  });
+});
+</script>
+</body>
+</html>
