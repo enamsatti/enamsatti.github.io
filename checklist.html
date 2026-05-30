@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AegisMD — Clinical AI Safety Checklist</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0A1628;--navy-mid:#12253F;--teal:#0D6E72;--teal-light:#0F8A8F;
+  --white:#FFFFFF;--off-white:#F8F7F4;--warm-grey:#E8E4DC;
+  --text-dark:#1A1A2E;--text-mid:#4A5568;--text-light:#8A96A8;--gold:#C4975A;
+  --red:#991B1B;--red-bg:#FEE2E2;--amber:#92400E;--amber-bg:#FEF3C7;
+  --green:#065F46;--green-bg:#D1FAE5;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--off-white);color:var(--text-dark);min-height:100vh}
+
+/* NAV */
+nav{background:var(--white);border-bottom:1px solid var(--warm-grey);padding:16px 32px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-wordmark{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--navy);letter-spacing:0.04em}
+.nav-wordmark span{color:var(--teal)}
+.nav-back{font-size:12px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-mid);text-decoration:none;transition:color 0.2s}
+.nav-back:hover{color:var(--teal)}
+
+/* HERO */
+.hero{background:var(--navy);padding:56px 32px 48px;text-align:center;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--teal)}
+.hero-eyebrow{font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--teal-light);margin-bottom:20px}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,5vw,48px);font-weight:300;color:var(--white);line-height:1.2;margin-bottom:16px;max-width:680px;margin-left:auto;margin-right:auto}
+.hero h1 em{font-style:italic;color:#7dd4d6}
+.hero p{color:rgba(255,255,255,0.6);font-size:15px;max-width:520px;margin:0 auto 32px;line-height:1.7;font-weight:300}
+.hero-stats{display:flex;justify-content:center;gap:48px;flex-wrap:wrap}
+.hero-stat .num{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:500;color:#7dd4d6;display:block;line-height:1}
+.hero-stat .label{font-size:11px;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.1em;margin-top:4px}
+
+/* ALERT */
+.alert-band{background:var(--red-bg);border-top:2px solid var(--red);border-bottom:2px solid var(--red);padding:12px 32px;text-align:center;font-size:13px;color:var(--red);font-weight:500}
+
+/* PROGRESS */
+.progress-wrap{max-width:760px;margin:32px auto 0;padding:0 24px}
+.progress-track{background:var(--warm-grey);height:4px;border-radius:2px}
+.progress-fill{height:4px;background:var(--teal);border-radius:2px;transition:width 0.4s ease;width:0%}
+.progress-label{font-size:12px;color:var(--text-light);text-align:right;margin-top:6px;letter-spacing:0.04em}
+
+/* MAIN */
+.main{max-width:760px;margin:24px auto 48px;padding:0 24px}
+
+/* SECTION */
+.section{background:var(--white);margin-bottom:12px;overflow:hidden;border:1px solid var(--warm-grey);transition:box-shadow 0.2s}
+.section:hover{box-shadow:0 4px 16px rgba(13,110,114,0.1)}
+.section-head{background:var(--navy);padding:14px 20px;display:flex;align-items:center;gap:12px}
+.section-num{background:var(--teal);color:var(--white);width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:600;flex-shrink:0}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:500;color:var(--white)}
+.section-prog{margin-left:auto;font-size:11px;color:rgba(255,255,255,0.45);font-weight:500}
+.section-prog span{color:#7dd4d6;font-weight:600}
+.sec-bar{background:rgba(255,255,255,0.1);height:3px}
+.sec-bar-fill{height:3px;background:var(--teal-light);transition:width 0.3s ease;width:0%}
+
+/* ITEMS */
+.items{padding:4px 0}
+.item{display:flex;align-items:flex-start;gap:14px;padding:14px 20px;border-bottom:1px solid var(--off-white);cursor:pointer;transition:background 0.15s;user-select:none;border-left:3px solid transparent}
+.item:last-child{border-bottom:none}
+.item:hover{background:rgba(13,110,114,0.04)}
+.item.critical{border-left-color:transparent}
+.item.checked{background:var(--green-bg);border-left-color:var(--green)}
+.item.critical.checked{background:var(--green-bg);border-left-color:var(--green)}
+.item.critical:not(.checked){border-left-color:var(--red)}
+.checkbox{width:20px;height:20px;border:2px solid var(--warm-grey);border-radius:3px;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all 0.15s;background:var(--white)}
+.item.critical:not(.checked) .checkbox{border-color:var(--red)}
+.item.checked .checkbox{background:var(--teal);border-color:var(--teal)}
+.checkmark{display:none;color:var(--white);font-size:12px;font-weight:700}
+.item.checked .checkmark{display:block}
+.item-num{font-size:10px;font-weight:600;color:var(--text-light);flex-shrink:0;min-width:22px;margin-top:3px}
+.item-text{font-size:13.5px;color:var(--text-dark);line-height:1.55;flex:1}
+.critical-tag{display:inline-block;background:var(--red);color:var(--white);font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:2px 6px;margin-left:8px;vertical-align:middle;border-radius:2px}
+
+/* SCORE DISPLAY */
+.score-float{position:fixed;bottom:24px;right:24px;background:var(--navy);border:1px solid var(--teal);border-radius:40px;padding:10px 20px;display:flex;align-items:center;gap:10px;box-shadow:0 4px 20px rgba(0,0,0,0.3);z-index:50}
+.score-float-label{font-size:11px;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.08em}
+.score-float-num{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:500;color:#7dd4d6;line-height:1}
+.score-float-total{font-size:12px;color:rgba(255,255,255,0.4)}
+
+/* CTA */
+.cta-wrap{text-align:center;margin:32px 0 8px}
+.btn-cta{background:var(--navy);color:var(--white);border:none;padding:16px 40px;font-size:14px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.2s;position:relative;overflow:hidden}
+.btn-cta::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--gold);transition:width 0.3s ease}
+.btn-cta:hover{background:var(--teal)}
+.btn-cta:hover::after{width:100%}
+.cta-note{font-size:12px;color:var(--text-light);margin-top:10px;font-style:italic}
+
+/* EMAIL GATE */
+.gate-overlay{display:none;position:fixed;inset:0;background:rgba(10,22,40,0.85);z-index:200;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(4px)}
+.gate-overlay.active{display:flex}
+.gate-card{background:var(--white);max-width:480px;width:100%;padding:40px 36px}
+.gate-card h2{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--navy);margin-bottom:8px}
+.gate-card p{font-size:14px;font-weight:300;color:var(--text-mid);line-height:1.7;margin-bottom:28px}
+.gate-score-preview{background:var(--navy);padding:16px 20px;margin-bottom:28px;display:flex;align-items:center;gap:16px}
+.gate-score-num{font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:300;color:#7dd4d6;line-height:1}
+.gate-score-label{font-size:13px;color:rgba(255,255,255,0.6);font-weight:300;line-height:1.5}
+.gate-score-label strong{color:var(--white);display:block;font-size:15px;margin-bottom:2px}
+.field-group{margin-bottom:16px}
+.field-group label{display:block;font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-mid);margin-bottom:6px}
+.field-group input{width:100%;border:1px solid var(--warm-grey);padding:12px 14px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--text-dark);transition:border-color 0.2s;background:var(--white)}
+.field-group input:focus{outline:none;border-color:var(--teal)}
+.btn-gate{width:100%;background:var(--navy);color:var(--white);border:none;padding:16px;font-size:13px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.2s;margin-top:8px}
+.btn-gate:hover{background:var(--teal)}
+.gate-privacy{font-size:11px;color:var(--text-light);text-align:center;margin-top:12px}
+
+/* RESULTS */
+.results{display:none;background:var(--white);border:1px solid var(--warm-grey);margin-top:24px;animation:fadeUp 0.4s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.results-header{background:var(--navy);padding:24px 28px;border-bottom:3px solid var(--teal)}
+.results-header h2{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--white);margin-bottom:4px}
+.results-header p{font-size:12px;color:rgba(255,255,255,0.45)}
+.results-body{padding:28px}
+.score-display{display:flex;align-items:center;gap:24px;padding:20px 24px;border:2px solid;margin-bottom:24px}
+.score-display.excellent{background:var(--green-bg);border-color:var(--green)}
+.score-display.good{background:#EEF7F7;border-color:var(--teal)}
+.score-display.warning{background:#FFFBEB;border-color:#F59E0B}
+.score-display.danger{background:var(--red-bg);border-color:var(--red)}
+.score-display.regulatory{background:#FFF7ED;border-color:#F59E0B}
+.score-big{font-family:'Cormorant Garamond',serif;font-size:64px;font-weight:300;line-height:1}
+.score-display.excellent .score-big{color:var(--green)}
+.score-display.good .score-big{color:var(--teal)}
+.score-display.warning .score-big{color:var(--amber)}
+.score-display.danger .score-big,.score-display.regulatory .score-big{color:var(--red)}
+.score-verdict{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500;margin-bottom:6px}
+.score-display.excellent .score-verdict{color:var(--green)}
+.score-display.good .score-verdict{color:var(--teal)}
+.score-display.warning .score-verdict{color:var(--amber)}
+.score-display.danger .score-verdict,.score-display.regulatory .score-verdict{color:var(--red)}
+.score-desc{font-size:13px;color:var(--text-mid);line-height:1.6;font-weight:300}
+.gaps-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:var(--navy);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--warm-grey)}
+.gap-item{display:flex;gap:12px;padding:12px 16px;margin-bottom:6px;border-left:3px solid}
+.gap-item.gap-critical{background:#FFF7ED;border-left-color:#F59E0B}
+.gap-item.gap-normal{background:var(--red-bg);border-left-color:var(--red)}
+.gap-item.gap-critical .gap-num{color:var(--amber);font-weight:700;font-size:10px;min-width:24px;flex-shrink:0;margin-top:2px}
+.gap-item.gap-normal .gap-num{color:var(--red);font-weight:700;font-size:10px;min-width:24px;flex-shrink:0;margin-top:2px}
+.gap-text{font-size:13px;color:var(--text-dark);line-height:1.55}
+.gap-section{font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);display:block;margin-bottom:3px}
+.no-gaps{background:var(--green-bg);border:1px solid var(--green);padding:16px 20px;text-align:center;color:var(--green);font-weight:500;font-size:14px;margin-bottom:20px}
+.results-cta{margin-top:24px;background:var(--navy);padding:24px 28px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.results-cta h3{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:var(--white);margin-bottom:6px}
+.results-cta p{font-size:12px;color:rgba(255,255,255,0.5);line-height:1.6;font-weight:300}
+.btn-primary{background:var(--teal);color:var(--white);border:none;padding:14px 28px;font-size:12px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:inline-block;transition:background 0.2s;font-family:'DM Sans',sans-serif}
+.btn-primary:hover{background:var(--teal-light)}
+.btn-secondary{background:transparent;color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.2);padding:13px 22px;font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;margin-left:8px;transition:all 0.2s;letter-spacing:0.06em;text-transform:uppercase}
+.btn-secondary:hover{border-color:var(--teal);color:var(--white)}
+
+/* FOOTER */
+footer{text-align:center;padding:24px;color:var(--text-light);font-size:11px;border-top:1px solid var(--warm-grey);margin-top:48px}
+footer a{color:var(--teal);text-decoration:none}
+
+@media(max-width:600px){
+  .hero{padding:40px 20px 36px}
+  .hero-stats{gap:28px}
+  .main{padding:0 16px}
+  .score-float{bottom:16px;right:16px;padding:8px 16px}
+  .results-cta{flex-direction:column}
+  .gate-card{padding:28px 24px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="https://enamsatti.github.io">
+    <svg width="26" height="30" viewBox="0 0 48 56" fill="none">
+      <path d="M24 2L44 10V28C44 40 35 49 24 53C13 49 4 40 4 28V10L24 2Z" fill="#0A1628"/>
+      <path d="M24 6L40 13V28C40 38.5 32.5 47 24 50C15.5 47 8 38.5 8 28V13L24 6Z" fill="#0D1F35"/>
+      <path d="M24 18L31.5 37" stroke="#0D6E72" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M24 18L16.5 37" stroke="#0D6E72" stroke-width="2.2" stroke-linecap="round"/>
+      <line x1="18.5" y1="30.5" x2="29.5" y2="30.5" stroke="#0D6E72" stroke-width="2" stroke-linecap="round"/>
+      <path d="M14 10.5L24 6.5L34 10.5" stroke="#C4975A" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
+    </svg>
+    <div class="nav-wordmark">Aegis<span>MD</span></div>
+  </a>
+  <a class="nav-back" href="https://enamsatti.github.io">← Back to AegisMD</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Clinical AI Safety Assessment</div>
+  <h1>Is Your Health AI Product <em>Safe to Deploy?</em></h1>
+  <p>24 questions. 6 risk categories. Get an instant safety report showing exactly where your product has gaps — before a clinician, regulator, or patient finds them first.</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><span class="num">24</span><span class="label">Questions</span></div>
+    <div class="hero-stat"><span class="num">6</span><span class="label">Risk Areas</span></div>
+    <div class="hero-stat"><span class="num">3</span><span class="label">Critical Areas</span></div>
+    <div class="hero-stat"><span class="num">5 min</span><span class="label">To Complete</span></div>
+  </div>
+</div>
+
+<div class="alert-band">
+  ⚠ Questions marked <strong>CRITICAL</strong> represent immediate regulatory and patient safety exposure. Answering NO to any one is a deployment blocker.
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label" id="progressLabel">0 of 24 answered</div>
+</div>
+
+<div class="main">
+
+  <!-- SECTION 1 -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">1</div>
+      <div class="section-title">Clinical Oversight</div>
+      <div class="section-prog"><span id="s1p">0</span> / 4</div>
+    </div>
+    <div class="sec-bar"><div class="sec-bar-fill" id="b1"></div></div>
+    <div class="items">
+      <div class="item" data-q="1" data-sec="1" data-critical="false" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-num">Q1</div><div class="item-text">Is there a licensed clinician on your core team or advisory board who has reviewed every category of AI output your product generates?</div></div>
+      <div class="item" data-q="2" data-sec="1" data-critical="false" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-num">Q2</div><div class="item-text">Has a physician who was NOT involved in building the product reviewed your clinical logic end to end?</div></div>
+      <div class="item" data-q="3" data-sec="1" data-critical="false" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-num">Q3</div><div class="item-text">Do you have a documented escalation protocol for when your AI produces an output a clinician disagrees with?</div></div>
+      <div class="item critical" data-q="4" data-sec="1" data-critical="true" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-num">Q4</div><div class="item-text">Can you produce a complete audit trail of every AI clinical decision within 30 days if a regulator requests it? <span class="critical-tag">Critical</span></div></div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">2</div>
+      <div class="section-title">Patient Safety</div>
+      <div class="section-prog"><span id="s2p">0</span> / 4</div>
+    </div>
+    <div class="sec-bar"><div class="sec-bar-fill" id="b2"></div></div>
+    <div class="items">
+      <div class="item" data-q="5" data-sec="2" data-critical="false" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-num">Q5</div><div class="item-text">Has your product been tested on vulnerable patient populations — pediatric, elderly, pregnant, or non-English speaking patients?</div></div>
+      <div class="item" data-q="6" data-sec="2" data-critical="false" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-num">Q6</div><div class="item-text">Do you know specifically which patient populations your AI performs worst on?</div></div>
+      <div class="item" data-q="7" data-sec="2" data-critical="false" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-num">Q7</div><div class="item-text">Is there a documented process for what happens when your AI is wrong and a patient is affected?</div></div>
+      <div class="item critical" data-q="8" data-sec="2" data-critical="true" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-num">Q8</div><div class="item-text">Is there a named person in your company who is legally and operationally accountable when your AI causes harm? <span class="critical-tag">Critical</span></div></div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">3</div>
+      <div class="section-title">Data &amp; Privacy</div>
+      <div class="section-prog"><span id="s3p">0</span> / 4</div>
+    </div>
+    <div class="sec-bar"><div class="sec-bar-fill" id="b3"></div></div>
+    <div class="items">
+      <div class="item" data-q="9" data-sec="3" data-critical="false" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-num">Q9</div><div class="item-text">Do you know exactly where patient data goes after a clinical session closes?</div></div>
+      <div class="item" data-q="10" data-sec="3" data-critical="false" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-num">Q10</div><div class="item-text">Can a patient request deletion of their data — and can you verify and document that it was deleted?</div></div>
+      <div class="item" data-q="11" data-sec="3" data-critical="false" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-num">Q11</div><div class="item-text">Have you signed a Business Associate Agreement with every vendor that touches patient data?</div></div>
+      <div class="item" data-q="12" data-sec="3" data-critical="false" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-num">Q12</div><div class="item-text">Has your data handling been reviewed by a HIPAA-qualified legal or compliance professional?</div></div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">4</div>
+      <div class="section-title">Governance &amp; Accountability</div>
+      <div class="section-prog"><span id="s4p">0</span> / 4</div>
+    </div>
+    <div class="sec-bar"><div class="sec-bar-fill" id="b4"></div></div>
+    <div class="items">
+      <div class="item" data-q="13" data-sec="4" data-critical="false" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-num">Q13</div><div class="item-text">Do you have a written policy for how your product handles a clinical error?</div></div>
+      <div class="item" data-q="14" data-sec="4" data-critical="false" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-num">Q14</div><div class="item-text">Are clinicians informed when your underlying model is updated in a way that could affect clinical outputs?</div></div>
+      <div class="item" data-q="15" data-sec="4" data-critical="false" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-num">Q15</div><div class="item-text">Do you have a process for monitoring your AI performance after it goes live — not just before?</div></div>
+      <div class="item critical" data-q="16" data-sec="4" data-critical="true" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-num">Q16</div><div class="item-text">Does your product comply with the specific AI regulations of every state or country where it is currently deployed? <span class="critical-tag">Critical</span></div></div>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">5</div>
+      <div class="section-title">Bias &amp; Fairness</div>
+      <div class="section-prog"><span id="s5p">0</span> / 4</div>
+    </div>
+    <div class="sec-bar"><div class="sec-bar-fill" id="b5"></div></div>
+    <div class="items">
+      <div class="item" data-q="17" data-sec="5" data-critical="false" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-num">Q17</div><div class="item-text">Has your product been tested across different racial, ethnic, and geographic patient populations?</div></div>
+      <div class="item" data-q="18" data-sec="5" data-critical="false" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-num">Q18</div><div class="item-text">Does your AI perform equally well for patients with limited English proficiency?</div></div>
+      <div class="item" data-q="19" data-sec="5" data-critical="false" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-num">Q19</div><div class="item-text">Was your training data reviewed for historical healthcare bias before your model was built?</div></div>
+      <div class="item" data-q="20" data-sec="5" data-critical="false" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-num">Q20</div><div class="item-text">Do you know if your AI confidence level changes based on patient demographics?</div></div>
+    </div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">6</div>
+      <div class="section-title">Deployment Readiness</div>
+      <div class="section-prog"><span id="s6p">0</span> / 4</div>
+    </div>
+    <div class="sec-bar"><div class="sec-bar-fill" id="b6"></div></div>
+    <div class="items">
+      <div class="item" data-q="21" data-sec="6" data-critical="false" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-num">Q21</div><div class="item-text">Have the clinicians who will use your product been trained on its limitations — not just its capabilities?</div></div>
+      <div class="item" data-q="22" data-sec="6" data-critical="false" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-num">Q22</div><div class="item-text">Do you have a policy specifically addressing shadow AI — unauthorized use of other AI tools alongside yours by clinical staff?</div></div>
+      <div class="item" data-q="23" data-sec="6" data-critical="false" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-num">Q23</div><div class="item-text">Has your product been assessed for clinical deskilling risk — the gradual erosion of clinician independent judgment?</div></div>
+      <div class="item" data-q="24" data-sec="6" data-critical="false" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-num">Q24</div><div class="item-text">Is there a kill switch — a way to immediately disable your AI if a safety issue is identified post-launch?</div></div>
+    </div>
+  </div>
+
+  <div class="cta-wrap">
+    <button class="btn-cta" id="ctaBtn" onclick="openGate()">Get My Safety Report →</button>
+    <p class="cta-note">Answer all questions then generate your personalised report</p>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results" id="results">
+    <div class="results-header">
+      <h2>Your AegisMD Clinical AI Safety Report</h2>
+      <p id="resultsDate"></p>
+    </div>
+    <div class="results-body">
+      <div class="score-display" id="scoreDisplay">
+        <div class="score-big" id="scoreBig"></div>
+        <div>
+          <div class="score-verdict" id="scoreVerdict"></div>
+          <div class="score-desc" id="scoreDesc"></div>
+        </div>
+      </div>
+      <div id="gapsSection"></div>
+      <div class="results-cta">
+        <div>
+          <h3>Get Your Full AegisMD Audit</h3>
+          <p>Independent physician-led adversarial safety assessment. Written report. Delivered in 10 days. Trusted by health AI companies serious about hospital-grade governance.</p>
+        </div>
+        <div style="display:flex;gap:0;flex-wrap:wrap">
+          <a class="btn-primary" id="auditBtn" href="#">Request Assessment →</a>
+          <button class="btn-secondary" onclick="resetAll()">Retake</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- SCORE FLOAT -->
+<div class="score-float" id="scoreFloat">
+  <div>
+    <div class="score-float-label">Score</div>
+  </div>
+  <div class="score-float-num" id="floatNum">0</div>
+  <div class="score-float-total">/ 24</div>
+</div>
+
+<!-- EMAIL GATE -->
+<div class="gate-overlay" id="gateOverlay">
+  <div class="gate-card">
+    <h2>Your report is ready.</h2>
+    <p>Enter your details to receive your personalised AegisMD Clinical AI Safety Report and see exactly where your product has gaps.</p>
+    <div class="gate-score-preview">
+      <div class="gate-score-num" id="gateScoreNum">0</div>
+      <div class="gate-score-label">
+        <strong id="gateScoreVerdict">Calculating...</strong>
+        <span id="gateScoreDesc">Your score out of 24</span>
+      </div>
+    </div>
+    <!-- Mailchimp form -->
+    <form action="https://outlook.us1.list-manage.com/subscribe/post?u=06899b2e781c0d7a944251eea&id=09430ec66a&f_id=00e7eae5f0" method="post" id="gateForm" target="_blank" onsubmit="handleGateSubmit(event)">
+      <div class="field-group">
+        <label for="gFname">First Name</label>
+        <input type="text" id="gFname" name="FNAME" placeholder="Dr. Enam" required>
+      </div>
+      <div class="field-group">
+        <label for="gCompany">Company / Product Name</label>
+        <input type="text" id="gCompany" name="COMPANY" placeholder="Your health AI company">
+      </div>
+      <div class="field-group">
+        <label for="gEmail">Work Email *</label>
+        <input type="email" id="gEmail" name="EMAIL" placeholder="you@yourcompany.com" required>
+      </div>
+      <!-- Mailchimp bot protection -->
+      <div style="position:absolute;left:-5000px" aria-hidden="true">
+        <input type="text" name="b_06899b2e781c0d7a944251eea_09430ec66a" tabindex="-1" value="">
+      </div>
+      <button type="submit" class="btn-gate">Show My Safety Report →</button>
+    </form>
+    <p class="gate-privacy">Your details are stored securely. No spam. Unsubscribe anytime.</p>
+  </div>
+</div>
+
+<footer>
+  <strong>Dr. Enam Satti, MBBS, MCCEE</strong> &nbsp;·&nbsp; Founder, AegisMD Clinical AI Safety Assessment &nbsp;·&nbsp;
+  <a href="mailto:AegisMD.safety@outlook.com">AegisMD.safety@outlook.com</a> &nbsp;·&nbsp;
+  <a href="https://enamsatti.github.io">enamsatti.github.io</a> &nbsp;·&nbsp; © AegisMD 2026
+</footer>
+
+<script>
+const TOTAL=24;
+const checked=new Set();
+const sectionNames={1:'Clinical Oversight',2:'Patient Safety',3:'Data & Privacy',4:'Governance & Accountability',5:'Bias & Fairness',6:'Deployment Readiness'};
+const questions={
+  1:'Is there a licensed clinician on your core team or advisory board who has reviewed every category of AI output?',
+  2:'Has a physician NOT involved in building the product reviewed your clinical logic end to end?',
+  3:'Do you have a documented escalation protocol for AI output disagreements?',
+  4:'[CRITICAL] Can you produce a complete audit trail of every AI clinical decision within 30 days?',
+  5:'Has your product been tested on vulnerable patient populations?',
+  6:'Do you know specifically which patient populations your AI performs worst on?',
+  7:'Is there a documented process for when your AI is wrong and a patient is affected?',
+  8:'[CRITICAL] Is there a named person legally and operationally accountable when your AI causes harm?',
+  9:'Do you know exactly where patient data goes after a clinical session closes?',
+  10:'Can a patient request deletion of their data and can you verify it was deleted?',
+  11:'Have you signed a BAA with every vendor that touches patient data?',
+  12:'Has your data handling been reviewed by a HIPAA-qualified professional?',
+  13:'Do you have a written policy for how your product handles a clinical error?',
+  14:'Are clinicians informed when your underlying model is updated affecting clinical outputs?',
+  15:'Do you have a process for monitoring your AI performance after it goes live?',
+  16:'[CRITICAL] Does your product comply with the specific AI regulations of every state/country where deployed?',
+  17:'Has your product been tested across different racial, ethnic, and geographic patient populations?',
+  18:'Does your AI perform equally well for patients with limited English proficiency?',
+  19:'Was your training data reviewed for historical healthcare bias?',
+  20:'Do you know if your AI confidence level changes based on patient demographics?',
+  21:'Have clinicians been trained on your product limitations not just capabilities?',
+  22:'Do you have a policy addressing shadow AI use by clinical staff?',
+  23:'Has your product been assessed for clinical deskilling risk?',
+  24:'Is there a kill switch to immediately disable your AI if a safety issue is found post-launch?'
+};
+
+function toggle(el){
+  const q=el.dataset.q;
+  if(checked.has(q)){checked.delete(q);el.classList.remove('checked')}
+  else{checked.add(q);el.classList.add('checked')}
+  updateUI();
+}
+
+function updateUI(){
+  const t=checked.size;
+  document.getElementById('floatNum').textContent=t;
+  document.getElementById('progressFill').style.width=(t/TOTAL*100)+'%';
+  document.getElementById('progressLabel').textContent=t+' of '+TOTAL+' answered';
+  for(let s=1;s<=6;s++){
+    let c=0;
+    document.querySelectorAll('[data-sec="'+s+'"]').forEach(i=>{if(checked.has(i.dataset.q))c++});
+    document.getElementById('s'+s+'p').textContent=c;
+    document.getElementById('b'+s).style.width=(c/4*100)+'%';
+  }
+  const btn=document.getElementById('ctaBtn');
+  btn.textContent=t===TOTAL?'Get My Safety Report →':'Get My Safety Report ('+t+'/24) →';
+}
+
+function getVerdict(score,hasCriticalFail){
+  if(hasCriticalFail)return{cls:'regulatory',verdict:'Regulatory Exposure Detected',desc:'You have answered NO to at least one CRITICAL question. This creates immediate regulatory and liability exposure that must be resolved before any clinical deployment — regardless of your overall score.'};
+  if(score>=20)return{cls:'excellent',verdict:'Strong Foundation',desc:'Your product shows solid safety awareness across most categories. An independent AegisMD audit can verify and document your posture for hospital contracts and investor due diligence.'};
+  if(score>=14)return{cls:'good',verdict:'Significant Gaps Present',desc:'Your product has meaningful safety gaps that must be resolved before clinical deployment. These are manageable but need structured attention now — before a hospital procurement team or regulator finds them first.'};
+  if(score>=7)return{cls:'warning',verdict:'High Risk — Not Ready',desc:'Multiple critical safety areas are unaddressed. Deploying in this state creates serious patient harm, regulatory, and liability exposure. Independent evaluation is strongly recommended.'};
+  return{cls:'danger',verdict:'Do Not Deploy',desc:'Your product is not safe to deploy. Significant foundational safety work is required before any clinical use. Contact AegisMD for a full assessment and remediation roadmap.'};
+}
+
+function openGate(){
+  const score=checked.size;
+  const criticalQs=['4','8','16'];
+  const hasCriticalFail=criticalQs.some(q=>!checked.has(q));
+  const v=getVerdict(score,hasCriticalFail);
+  document.getElementById('gateScoreNum').textContent=score+'/24';
+  document.getElementById('gateScoreVerdict').textContent=v.verdict;
+  document.getElementById('gateScoreDesc').textContent='Complete your details to see your full report';
+  document.getElementById('gateOverlay').classList.add('active');
+}
+
+function handleGateSubmit(e){
+  // Let Mailchimp form submit in new tab, then show results
+  setTimeout(showResults,500);
+  document.getElementById('gateOverlay').classList.remove('active');
+}
+
+function showResults(){
+  const score=checked.size;
+  const criticalQs=['4','8','16'];
+  const hasCriticalFail=criticalQs.some(q=>!checked.has(q));
+  const v=getVerdict(score,hasCriticalFail);
+  const r=document.getElementById('results');
+  r.style.display='block';
+  document.getElementById('resultsDate').textContent='Generated: '+new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  const sd=document.getElementById('scoreDisplay');
+  sd.className='score-display '+v.cls;
+  document.getElementById('scoreBig').textContent=score+'/24';
+  document.getElementById('scoreVerdict').textContent=v.verdict;
+  document.getElementById('scoreDesc').textContent=v.desc;
+  // Gaps
+  const unanswered=[];
+  for(let q=1;q<=TOTAL;q++){
+    if(!checked.has(String(q))){
+      const el=document.querySelector('[data-q="'+q+'"]');
+      unanswered.push({q,text:questions[q],critical:el&&el.dataset.critical==='true',sec:el?parseInt(el.dataset.sec):0});
+    }
+  }
+  const gs=document.getElementById('gapsSection');
+  if(unanswered.length===0){
+    gs.innerHTML='<div class="no-gaps">✓ You answered YES to all 24 questions. An AegisMD audit can independently verify and document these claims for your hospital partners and investors.</div>';
+  } else {
+    unanswered.sort((a,b)=>(b.critical?1:0)-(a.critical?1:0));
+    gs.innerHTML='<div class="gaps-title">Your '+unanswered.length+' Gap'+(unanswered.length>1?'s':'')+' — What Needs Attention</div>'+
+      unanswered.map(g=>'<div class="gap-item '+(g.critical?'gap-critical':'gap-normal')+'"><div class="gap-num">Q'+g.q+'</div><div class="gap-text"><span class="gap-section">'+sectionNames[g.sec]+'</span>'+g.text+'</div></div>').join('');
+  }
+  // Email CTA
+  const gLines=unanswered.map(g=>'  - Q'+g.q+': '+g.text).join('\n');
+  const subj=encodeURIComponent('AegisMD Assessment Request — Score '+score+'/24');
+  const body=encodeURIComponent('Hello Dr. Satti,\n\nI completed the AegisMD Pre-Launch Safety Checklist.\n\nMy Score: '+score+'/24\n\n'+(unanswered.length>0?'Areas where I answered NO ('+unanswered.length+' gaps):\n'+gLines+'\n\n':'I answered YES to all 24 questions.\n\n')+'Please let me know next steps.\n\nThank you.');
+  document.getElementById('auditBtn').href='mailto:AegisMD.safety@outlook.com?subject='+subj+'&body='+body;
+  setTimeout(()=>r.scrollIntoView({behavior:'smooth',block:'start'}),100);
+}
+
+function resetAll(){
+  checked.clear();
+  document.querySelectorAll('.item').forEach(el=>el.classList.remove('checked'));
+  document.getElementById('results').style.display='none';
+  updateUI();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// Close gate on background click
+document.getElementById('gateOverlay').addEventListener('click',function(e){
+  if(e.target===this)this.classList.remove('active');
+});
+</script>
+</body>
+</html>
