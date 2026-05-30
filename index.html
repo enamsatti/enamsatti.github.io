@@ -283,63 +283,83 @@ footer{background:#060E1A;padding:48px;display:flex;justify-content:space-betwee
   </div>
 </section>
 
-<!-- PRICING -->
+<!-- ASSESSMENT TIERS -->
 <section class="section-pricing" id="pricing">
   <div class="section-label reveal">Assessment Tiers</div>
-  <h2 class="section-headline reveal">Independent physician expertise, priced for health AI startups.</h2>
-  <div class="pricing-grid">
+  <h2 class="section-headline reveal">Four tiers of independent clinical AI safety evaluation — scoped to your system and your needs.</h2>
+  <div class="pricing-grid" style="grid-template-columns:repeat(2,1fr)">
+
     <div class="pricing-card reveal">
-      <div class="pricing-tier">Founding Rate</div>
-      <div class="pricing-price">$2,500</div>
-      <div class="pricing-range">Limited to 3 clients only</div>
+      <div class="pricing-tier">Response Safety Review</div>
       <div class="pricing-divider"></div>
-      <div class="pricing-founding">⟡ Full Standard assessment — early access rate</div>
+      <p style="font-size:13px;font-weight:300;color:var(--text-mid);margin-bottom:20px;line-height:1.6">Entry-level evaluation. No system access required — you provide AI-generated outputs, we audit them for clinical safety.</p>
       <ul class="pricing-features">
-        <li>Full 24-point adversarial evaluation</li>
+        <li>Batch evaluation of AI-generated clinical responses</li>
+        <li>Classification against 12-category failure taxonomy</li>
+        <li>Premature reassurance and unsafe triage detection</li>
+        <li>35-point safety scoring per response</li>
+        <li>Written findings report</li>
+        <li>Remediation recommendations</li>
+      </ul>
+      <a class="btn-outline" href="mailto:AegisMD.safety@outlook.com?subject=AegisMD%20Response%20Safety%20Review%20Request&body=Hello%20Dr.%20Satti%2C%0A%0AI%27d%20like%20to%20enquire%20about%20a%20Clinical%20Response%20Safety%20Review.%0A%0ATool%20name%3A%20%0AWhat%20it%20does%20and%20who%20uses%20it%3A%20%0ACurrent%20deployment%20stage%3A%20%0A%0AThank%20you.">Request Scoping Call</a>
+    </div>
+
+    <div class="pricing-card featured reveal">
+      <div class="pricing-badge">Most Requested</div>
+      <div class="pricing-tier">Standard Audit</div>
+      <div class="pricing-divider"></div>
+      <p style="font-size:13px;font-weight:300;color:rgba(255,255,255,0.65);margin-bottom:20px;line-height:1.6">Full adversarial red team evaluation against the AegisMD 27-point framework. For clinical AI systems at any stage.</p>
+      <ul class="pricing-features">
+        <li>Full 27-point adversarial evaluation</li>
+        <li>Authority and persona exploit testing</li>
+        <li>Clinical logic and calculation failure testing</li>
+        <li>Technical and privacy attack testing</li>
         <li>CHAI–Joint Commission alignment mapping</li>
         <li>Geographical bias assessment</li>
         <li>Written report — Word + PDF</li>
         <li>One-hour debrief call</li>
         <li>Formal compliance statement</li>
+        <li>Annual revalidation schedule</li>
       </ul>
-      <a class="btn-outline" href="mailto:AegisMD.safety@outlook.com?subject=AegisMD%20Founding%20Rate%20Request&body=Hello%20Dr.%20Satti%2C%0A%0AI%27m%20interested%20in%20the%20AegisMD%20Founding%20Rate%20assessment.%0A%0ATool%20name%3A%20%0AWhat%20it%20does%20and%20who%20uses%20it%3A%20%0ACurrent%20deployment%20stage%3A%20%0A%0AThank%20you.">Request Founding Rate</a>
+      <a class="btn-outline-white" href="mailto:AegisMD.safety@outlook.com?subject=AegisMD%20Standard%20Audit%20Request&body=Hello%20Dr.%20Satti%2C%0A%0AI%27d%20like%20to%20enquire%20about%20a%20Standard%20clinical%20AI%20safety%20audit.%0A%0ATool%20name%3A%20%0AWhat%20it%20does%20and%20who%20uses%20it%3A%20%0ACurrent%20deployment%20stage%3A%20%0A%0AThank%20you.">Request Scoping Call</a>
     </div>
-    <div class="pricing-card featured reveal">
-      <div class="pricing-badge">Most Popular</div>
-      <div class="pricing-tier">Standard</div>
-      <div class="pricing-price">$8,000</div>
-      <div class="pricing-range">to $12,000 depending on scope</div>
-      <div class="pricing-divider"></div>
-      <ul class="pricing-features">
-        <li>Full 24-point adversarial evaluation</li>
-        <li>Governance gap analysis</li>
-        <li>CHAI–Joint Commission alignment</li>
-        <li>Geographical bias assessment</li>
-        <li>Written report — Word + PDF</li>
-        <li>One-hour debrief call</li>
-        <li>Formal compliance statement</li>
-        <li>Revalidation schedule included</li>
-      </ul>
-      <a class="btn-outline-white" href="mailto:AegisMD.safety@outlook.com?subject=AegisMD%20Standard%20Assessment%20Request&body=Hello%20Dr.%20Satti%2C%0A%0AI%27d%20like%20to%20request%20a%20Standard%20clinical%20AI%20safety%20assessment.%0A%0ATool%20name%3A%20%0AWhat%20it%20does%20and%20who%20uses%20it%3A%20%0ACurrent%20deployment%20stage%3A%20%0A%0AThank%20you.">Request Standard Assessment</a>
-    </div>
+
     <div class="pricing-card reveal">
-      <div class="pricing-tier">Comprehensive</div>
-      <div class="pricing-price">$15,000</div>
-      <div class="pricing-range">to $25,000 depending on scope</div>
+      <div class="pricing-tier">Comprehensive Audit</div>
       <div class="pricing-divider"></div>
+      <p style="font-size:13px;font-weight:300;color:var(--text-mid);margin-bottom:20px;line-height:1.6">Full 43-point evaluation for complex multi-module systems or those seeking hospital procurement and regulatory documentation.</p>
       <ul class="pricing-features">
-        <li>Full 39-point adversarial evaluation</li>
-        <li>Multi-module system assessment</li>
+        <li>Full 43-point adversarial evaluation</li>
+        <li>All Standard tier components</li>
+        <li>Architecture-specific exploit testing</li>
+        <li>Operational and systemic exploit testing</li>
+        <li>Privacy and infrastructure exploit testing</li>
         <li>Extended geographical bias deep-dive</li>
-        <li>Architecture review included</li>
         <li>Multi-setting deployment assessment</li>
-        <li>Written report — Word + PDF</li>
         <li>Two debrief calls</li>
-        <li>Formal compliance statement</li>
+        <li>Governance documentation package</li>
       </ul>
-      <a class="btn-outline" href="mailto:AegisMD.safety@outlook.com?subject=AegisMD%20Comprehensive%20Assessment%20Request&body=Hello%20Dr.%20Satti%2C%0A%0AI%27d%20like%20to%20request%20a%20Comprehensive%20clinical%20AI%20safety%20assessment.%0A%0ATool%20name%3A%20%0AWhat%20it%20does%20and%20who%20uses%20it%3A%20%0ACurrent%20deployment%20stage%3A%20%0A%0AThank%20you.">Request Comprehensive</a>
+      <a class="btn-outline" href="mailto:AegisMD.safety@outlook.com?subject=AegisMD%20Comprehensive%20Audit%20Request&body=Hello%20Dr.%20Satti%2C%0A%0AI%27d%20like%20to%20enquire%20about%20a%20Comprehensive%20clinical%20AI%20safety%20audit.%0A%0ATool%20name%3A%20%0AWhat%20it%20does%20and%20who%20uses%20it%3A%20%0ACurrent%20deployment%20stage%3A%20%0A%0AThank%20you.">Request Scoping Call</a>
     </div>
+
+    <div class="pricing-card reveal">
+      <div class="pricing-tier">Enterprise &amp; Governance</div>
+      <div class="pricing-divider"></div>
+      <p style="font-size:13px;font-weight:300;color:var(--text-mid);margin-bottom:20px;line-height:1.6">For health systems, insurers, procurement bodies, and organizations requiring independent AI safety documentation for regulatory submission or oversight purposes.</p>
+      <ul class="pricing-features">
+        <li>Scoped individually to organizational needs</li>
+        <li>Supports hospital AI procurement decisions</li>
+        <li>Regulatory submission documentation</li>
+        <li>Risk management and compliance evidence</li>
+        <li>Board and executive-level reporting</li>
+        <li>Ongoing safety monitoring advisory</li>
+        <li>Annual revalidation programme</li>
+      </ul>
+      <a class="btn-outline" href="mailto:AegisMD.safety@outlook.com?subject=AegisMD%20Enterprise%20Enquiry&body=Hello%20Dr.%20Satti%2C%0A%0AI%27d%20like%20to%20discuss%20an%20enterprise%20or%20governance%20engagement%20with%20AegisMD.%0A%0AOrganisation%3A%20%0AContext%3A%20%0A%0AThank%20you.">Request Scoping Call</a>
+    </div>
+
   </div>
+  <p style="text-align:center;font-size:13px;color:var(--text-light);margin-top:32px;font-style:italic">Pricing provided on request following a scoping call. All engagements begin with a complimentary 30-minute consultation.</p>
 </section>
 
 <!-- ABOUT -->
